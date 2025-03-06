@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 require_once '../connexionDB.php';
 require_once 'functions.php';
 require_once '../Authentication/jwt_utils.php';
+require_once '../check_token.php';
 
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
@@ -14,7 +15,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 $secret = 'your-256-bit-secret';
 
 $jwt = get_bearer_token();
-if (!$jwt || !is_jwt_valid($jwt, $secret)) {
+if (!$jwt || !checkTokenValidity($jwt)) {
     http_response_code(401);
     echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide ou manquant."]);
     exit();
