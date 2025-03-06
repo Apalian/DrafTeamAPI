@@ -45,7 +45,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         echo readMatch($linkpdo, $dateMatch, $heure);
         break;
     case 'POST':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode([
                 "status" => "error",
@@ -65,7 +65,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         echo writeMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencontre, $scoreEquipeDomicile, $scoreEquipeExterne);
         break;
     case 'PATCH':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode([
                 "status" => "error",
@@ -86,7 +86,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         );
         break;
     case 'PUT':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode([
                 "status" => "error",
@@ -105,7 +105,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         echo putMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencontre, $scoreEquipeDomicile, $scoreEquipeExterne);
         break;
     case 'DELETE':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode([
                 "status" => "error",
