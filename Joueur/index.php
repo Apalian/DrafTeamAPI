@@ -4,7 +4,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once '../connexionDB.php';
 require_once 'functions.php';
-require_once '../Authentication/jwt_utils.php';
 require_once '../check_token.php';
 
 header("Content-Type: application/json");
