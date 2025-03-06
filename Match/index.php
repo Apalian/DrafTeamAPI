@@ -1,7 +1,6 @@
 <?php
 require_once '../connexionDB.php';
 require_once 'functions.php';
-require_once '../Authentication/jwt_utils.php'; // Inclure le fichier jwt_utils.php
 require_once '../check_token.php'; // Inclure le fichier check_token.php
 
 header("Content-Type: application/json");
