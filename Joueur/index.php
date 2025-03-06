@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,12 +8,17 @@ require_once '../connexionDB.php';
 require_once 'functions.php';
 require_once '../check_token.php';
 
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
+$secret = 'your-256-bit-secret';
+
+header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-$secret = 'your-256-bit-secret';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 
 $jwt = get_bearer_token();
 if (!$jwt || !checkTokenValidity($jwt)) {
@@ -28,15 +34,6 @@ $numLicense = isset($_GET['numLicense']) ? intval($_GET['numLicense']) : null;
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
 
-// Vérifiez si la méthode de la requête est OPTIONS
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Ajoutez les en-têtes CORS
-    header("Access-Control-Allow-Origin: *"); // Remplacez * par votre domaine si nécessaire
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Méthodes autorisées
-    header("Access-Control-Allow-Headers: Content-Type, Authorization"); // En-têtes autorisés
-    http_response_code(200); // Répondre avec un statut 200 OK
-    exit; // Terminer le script ici
-}
 
 switch ($_SERVER['REQUEST_METHOD']){
     case 'GET' :
