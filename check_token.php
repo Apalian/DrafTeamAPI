@@ -71,12 +71,4 @@ function checkTokenValidity($token) {
     }
 }
 
-// Exemple d'utilisation
-$token = 'votre_token_ici'; // Remplacez par votre token
-if (checkTokenValidity($token)) {
-    echo "Le token est valide.";
-} else {
-    echo "Le token est invalide.";
-}
-
 ?> 
