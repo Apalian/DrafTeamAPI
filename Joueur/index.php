@@ -40,7 +40,7 @@ switch ($_SERVER['REQUEST_METHOD']){
         echo readJoueur($linkpdo, $numLicense);
         break;
     case 'POST' :
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour ajouter un joueur."]);
             exit();
@@ -57,7 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']){
         echo writeJoueur($linkpdo, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
         break;
     case 'PATCH' :
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour modifier un joueur."]);
             exit();
@@ -67,7 +67,7 @@ switch ($_SERVER['REQUEST_METHOD']){
         break;
 
     case 'PUT':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour remplacer un joueur."]);
             exit();
@@ -77,7 +77,7 @@ switch ($_SERVER['REQUEST_METHOD']){
         break;
 
     case 'DELETE':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour supprimer un joueur."]);
             exit();
