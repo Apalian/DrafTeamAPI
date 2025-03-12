@@ -4,16 +4,26 @@ require_once 'functions.php';
 require_once '../check_token.php';
 
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Gestion de la requête preflight (OPTIONS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 $secret = 'your-256-bit-secret';
 
 $jwt = get_bearer_token();
 if (!$jwt || !checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide ou manquant."]);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 401,
+        "status_message" => "Token JWT invalide ou manquant."
+    ]);
     exit();
 }
 
@@ -29,9 +39,13 @@ switch ($_SERVER['REQUEST_METHOD']){
         echo readParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
     case 'POST' :
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
-            echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour ajouter une participation."]);
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Vous devez être administrateur pour ajouter une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
@@ -49,40 +63,76 @@ switch ($_SERVER['REQUEST_METHOD']){
         echo writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste);
         break;
     case 'PATCH' :
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
-            echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour modifier une participation."]);
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Vous devez être administrateur pour modifier une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
-        echo patchParticipation($linkpdo, $numLicense, isset($input['dateMatch']) ? $input['dateMatch'] : null, isset($input['heure']) ? $input['heure'] : null, isset($input['estTitulaire']) ? $input['estTitulaire'] : null, isset($input['endurance']) ? $input['endurance'] : null, isset($input['vitesse']) ? $input['vitesse'] : null, isset($input['defense']) ? $input['defense'] : null, isset($input['tirs']) ? $input['tirs'] : null, isset($input['passes']) ? $input['passes'] : null, isset($input['poste']) ? $input['poste'] : null);
+        echo patchParticipation(
+            $linkpdo, 
+            $numLicense, 
+            isset($input['dateMatch']) ? $input['dateMatch'] : null, 
+            isset($input['heure']) ? $input['heure'] : null, 
+            isset($input['estTitulaire']) ? $input['estTitulaire'] : null, 
+            isset($input['endurance']) ? $input['endurance'] : null, 
+            isset($input['vitesse']) ? $input['vitesse'] : null, 
+            isset($input['defense']) ? $input['defense'] : null, 
+            isset($input['tirs']) ? $input['tirs'] : null, 
+            isset($input['passes']) ? $input['passes'] : null, 
+            isset($input['poste']) ? $input['poste'] : null
+        );
         break;
-
     case 'PUT':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
-            echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour remplacer une participation."]);
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Vous devez être administrateur pour remplacer une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
-        echo putParticipation($linkpdo, $numLicense, $input['dateMatch'], $input['heure'], $input['estTitulaire'], $input['endurance'], $input['vitesse'], $input['defense'], $input['tirs'], $input['passes'], $input['poste']);
+        echo putParticipation(
+            $linkpdo, 
+            $numLicense, 
+            $input['dateMatch'], 
+            $input['heure'], 
+            $input['estTitulaire'], 
+            $input['endurance'], 
+            $input['vitesse'], 
+            $input['defense'], 
+            $input['tirs'], 
+            $input['passes'], 
+            $input['poste']
+        );
         break;
-
     case 'DELETE':
-        if ($userRole !== 'admin') {
+        if ($userRole !== 'administrateur') {
             http_response_code(403);
-            echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour supprimer une participation."]);
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Vous devez être administrateur pour supprimer une participation."
+            ]);
             exit();
         }
         echo deleteParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
-
     case 'OPTIONS':
         http_response_code(204);
         break;
-
     default:
         http_response_code(405);
-        echo json_encode(["status" => "error", "status_code" => 405, "status_message" => "Méthode non autorisée"], JSON_PRETTY_PRINT);
+        echo json_encode([
+            "status" => "error",
+            "status_code" => 405,
+            "status_message" => "Méthode non autorisée"
+        ], JSON_PRETTY_PRINT);
         break;
 }
