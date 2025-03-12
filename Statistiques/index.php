@@ -6,18 +6,22 @@ require_once '../check_token.php';
 
 $secret = 'your-256-bit-secret';
 
+// Configuration CORS
 header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Max-Age: 3600");
 
-// Gestion de la requête preflight (OPTIONS)
+// Gestion de la requête preflight OPTIONS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
+    // Renvoyer uniquement les en-têtes CORS pour les requêtes OPTIONS
+    http_response_code(204);
     exit();
 }
 
-// Vérifier le token JWT
+// Vérifier le token JWT (sauf pour OPTIONS)
 $jwt = get_bearer_token();
 if (!$jwt || !checkTokenValidity($jwt)) {
     http_response_code(401);
