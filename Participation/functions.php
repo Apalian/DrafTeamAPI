@@ -1,5 +1,10 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', 'php_errors.log'); // Change le nom du fichier si besoin
+
 function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heure = null) {
     try {
         if (is_null($numLicense) && is_null($dateMatch) && is_null($heure)) {
@@ -38,8 +43,8 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
     if (empty($numLicense) || empty($dateMatch) || empty($heure) || empty($estTitulaire)) {
         deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire");
         return;
-
     }
+
     error_log("Début de writeParticipation()");
     error_log("numLicense: " . var_export($numLicense, true));
     error_log("dateMatch: " . var_export($dateMatch, true));
