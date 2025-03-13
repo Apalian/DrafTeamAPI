@@ -41,6 +41,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
 
     try {
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
+        error_log("Requête SQL: " . $requete);
         $req = $linkpdo->prepare($requete);
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
         $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
@@ -52,7 +53,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
         $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
         $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
-        error_log("Requête SQL: " . $requete);
+        
         error_log("Paramètres: " . json_encode([
             "numLicense" => $numLicense,
             "dateMatch" => $dateMatch,
