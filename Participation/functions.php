@@ -56,7 +56,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
  
         $req->execute();
 
-        (201, "success", "Donnée créée avec succès", [
+        deliver_response(201, "success", "Donnée créée avec succès", [
             "numLicense" => $numLicense,
             "datedeliver_responseMatch" => $dateMatch,
             "heure" => $heure,
