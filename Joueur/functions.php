@@ -5,7 +5,7 @@ function readJoueur($linkpdo, $numLicense = null) {
             $requete = "SELECT * FROM `JOUEURS`";
             $req = $linkpdo->prepare($requete);
         } else {
-            $requete = "SELECT * FROM `JOUEURS` WHERE numLicense = ':numLicense'";
+            $requete = "SELECT * FROM `JOUEURS` WHERE numLicense = :numLicense";
             $req = $linkpdo->prepare($requete);
             $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
         }
@@ -19,6 +19,7 @@ function readJoueur($linkpdo, $numLicense = null) {
             deliver_response(404, "error", "Aucune donnée trouvée.");
         }
     } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération : " . $e->getMessage());
         deliver_response(500, "fatal error", "Erreur lors de la récupération : " . $e->getMessage());
     }
 }
