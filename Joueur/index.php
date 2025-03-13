@@ -31,6 +31,7 @@ $payload = json_decode(base64_decode(explode('.', $jwt)[1]), true);
 $userRole = $payload['role'] ?? null;
 
 $numLicense = isset($_GET['numLicense']) ? intval($_GET['numLicense']) : null;
+error_log("numLicense: " . $numLicense);
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
 
