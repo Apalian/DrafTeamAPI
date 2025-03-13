@@ -38,7 +38,19 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
     if (empty($numLicense) || empty($dateMatch) || empty($heure) || empty($estTitulaire)) {
         deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire");
         return;
+
     }
+    error_log("Début de writeParticipation()");
+    error_log("numLicense: " . var_export($numLicense, true));
+    error_log("dateMatch: " . var_export($dateMatch, true));
+    error_log("heure: " . var_export($heure, true));
+    error_log("estTitulaire: " . var_export($estTitulaire, true));
+    error_log("endurance: " . var_export($endurance, true));
+    error_log("vitesse: " . var_export($vitesse, true));
+    error_log("defense: " . var_export($defense, true));
+    error_log("tirs: " . var_export($tirs, true));
+    error_log("passes: " . var_export($passes, true));
+    error_log("poste: " . var_export($poste, true));
 
     try {
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
