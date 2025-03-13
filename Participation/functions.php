@@ -35,7 +35,7 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
 
 function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste) {
     if (empty($numLicense) || empty($dateMatch) || empty($heure) || empty($estTitulaire)) {
-        deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire manquant");
+        deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire");
         return;
     }
 
@@ -52,6 +52,19 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
         $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
         $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
+        error_log("Requête SQL: " . $requete);
+        error_log("Paramètres: " . json_encode([
+            "numLicense" => $numLicense,
+            "dateMatch" => $dateMatch,
+            "heure" => $heure,
+            "estTitulaire" => $estTitulaire,
+            "endurance" => $endurance,
+            "vitesse" => $vitesse,
+            "defense" => $defense,
+            "tirs" => $tirs,
+            "passes" => $passes,
+            "poste" => $poste
+        ]));
         $req->execute();
 
         deliver_response(201, "success", "Donnée créée avec succès", [
