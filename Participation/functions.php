@@ -55,7 +55,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
  
         $req->execute();
-
+        error_log("Donnée créée avec succès");
         deliver_response(201, "success", "Donnée créée avec succès", [
             "numLicense" => $numLicense,
             "datedeliver_responseMatch" => $dateMatch,
