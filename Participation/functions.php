@@ -58,7 +58,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
         $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
         $req->bindParam(':heure', $heure, PDO::PARAM_STR);
-        $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_STR);
+        $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
         $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
         $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
         $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
