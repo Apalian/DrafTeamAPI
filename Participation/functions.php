@@ -34,59 +34,36 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
             deliver_response(404, "error", "Aucune donnée trouvée.");
         }
     } catch (PDOException $e) {
-        deliver_response(500, "fatal error", "Erreur lors de la récupération : " . $e->getMessage());
+        deliver_response(500, "fatal error", "Erreur lors du chargement des participations : " . $e->getMessage());
     }
 }
 
 
 function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste) {
     if (empty($numLicense) || empty($dateMatch) || empty($heure) || empty($estTitulaire)) {
-        deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire");
+        deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire manquant");
         return;
     }
-
-    error_log("Début de writeParticipation()");
-    error_log("numLicense: " . var_export($numLicense, true));
-    error_log("dateMatch: " . var_export($dateMatch, true));
-    error_log("heure: " . var_export($heure, true));
-    error_log("estTitulaire: " . var_export($estTitulaire, true));
-    error_log("endurance: " . var_export($endurance, true));
-    error_log("vitesse: " . var_export($vitesse, true));
-    error_log("defense: " . var_export($defense, true));
-    error_log("tirs: " . var_export($tirs, true));
-    error_log("passes: " . var_export($passes, true));
-    error_log("poste: " . var_export($poste, true));
 
     try {
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
         $req = $linkpdo->prepare($requete);
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
-        error_log("numLicense: " . $numLicense);
         $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
-        error_log("dateMatch: " . $dateMatch);
         $req->bindParam(':heure', $heure, PDO::PARAM_STR);
-        error_log("heure: " . $heure);
         $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
-        error_log("estTitulaire: " . $estTitulaire);
-        $req->bindValue(':endurance', $endurance ?? null, PDO::PARAM_INT);
-        error_log("endurance: " . $endurance);
-        $req->bindValue(':vitesse', $vitesse ?? null, PDO::PARAM_INT);
-        error_log("vitesse: " . $vitesse);
-        $req->bindValue(':defense', $defense ?? null, PDO::PARAM_INT);
-        error_log("defense: " . $defense);
-        $req->bindValue(':tirs', $tirs ?? null, PDO::PARAM_INT);
-        error_log("tirs: " . $tirs);
-        $req->bindValue(':passes', $passes ?? null, PDO::PARAM_INT);
-        error_log("passes: " . $passes);
-        $req->bindValue(':poste', $poste ?? null, PDO::PARAM_STR);
-        error_log("poste: " . $poste);
-
+        $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
  
         $req->execute();
-        error_log("Donnée créée avec succès");
+
         deliver_response(201, "success", "Donnée créée avec succès", [
             "numLicense" => $numLicense,
-            "datedeliver_responseMatch" => $dateMatch,
+            "dateMatch" => $dateMatch,
             "heure" => $heure,
             "estTitulaire" => $estTitulaire,
             "endurance" => $endurance,
