@@ -44,15 +44,25 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
         $req = $linkpdo->prepare($requete);
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
+        error_log("numLicense: " . $numLicense);
         $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
+        error_log("dateMatch: " . $dateMatch);
         $req->bindParam(':heure', $heure, PDO::PARAM_STR);
+        error_log("heure: " . $heure);
         $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
+        error_log("estTitulaire: " . $estTitulaire);
         $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
+        error_log("endurance: " . $endurance);
         $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
+        error_log("vitesse: " . $vitesse);
         $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
+        error_log("defense: " . $defense);
         $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
+        error_log("tirs: " . $tirs);
         $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
+        error_log("passes: " . $passes);
         $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
+        error_log("poste: " . $poste);
  
         $req->execute();
         error_log("Donnée créée avec succès");
