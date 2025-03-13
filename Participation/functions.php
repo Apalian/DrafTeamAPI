@@ -70,7 +70,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion : " . $e->getMessage());
-        deliver_response(501, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
+        deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
     }
 }
 
@@ -200,4 +200,48 @@ function deliver_response($status_code, $status, $status_message, $data = null) 
     }
 
     echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+}
+
+function writeMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencontre, $scoreEquipeDomicile, $scoreEquipeExterne, $participations) {
+    if (empty($dateMatch) || empty($heure) || empty($nomEquipeAdverse) || empty($LieuRencontre)) {
+        deliver_response(400, "error", "Paramètre dateMatch, heure, nomEquipeAdverse, LieuRencontre manquant");
+        return;
+    }
+
+    try {
+        // Log the incoming data for debugging
+        error_log("Received data: " . json_encode($input));
+
+        $requete = "INSERT INTO `MATCHS` (dateMatch, heure, nomEquipeAdverse, LieuRencontre, scoreEquipeDomicile, scoreEquipeExterne) VALUES (:dateMatch, :heure, :nomEquipeAdverse, :LieuRencontre, :scoreEquipeDomicile, :scoreEquipeExterne)";
+        $req = $linkpdo->prepare($requete);
+        $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);
+        $req->bindParam(':heure', $heure, PDO::PARAM_STR);  
+        $req->bindParam(':nomEquipeAdverse', $nomEquipeAdverse, PDO::PARAM_STR);
+        $req->bindParam(':LieuRencontre', $LieuRencontre, PDO::PARAM_STR);
+        $req->bindParam(':scoreEquipeDomicile', $scoreEquipeDomicile, PDO::PARAM_INT);
+        $req->bindParam(':scoreEquipeExterne', $scoreEquipeExterne, PDO::PARAM_INT);
+        $req->execute();
+
+        // Assuming you have a function to handle participations
+        if (!empty($input['participations'])) {
+            foreach ($input['participations'] as $participation) {
+                // Log participation data for debugging
+                error_log("Adding participation: " . json_encode($participation));
+                // Call a function to handle adding participations
+                addParticipation($linkpdo, $dateMatch, $heure, $participation);
+            }
+        }
+
+        deliver_response(201, "success", "Donnée créée avec succès", [
+            "dateMatch" => $dateMatch,
+            "heure" => $heure,
+            "nomEquipeAdverse" => $nomEquipeAdverse,
+            "LieuRencontre" => $LieuRencontre,
+            "scoreEquipeDomicile" => $scoreEquipeDomicile,
+            "scoreEquipeExterne" => $scoreEquipeExterne
+        ]);
+    } catch (PDOException $e) {
+        error_log("Erreur lors de l'insertion : " . $e->getMessage());
+        deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
+    }
 }
