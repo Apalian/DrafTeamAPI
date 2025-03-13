@@ -80,7 +80,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
             "passes" => $passes,
             "poste" => $poste
         ]);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         error_log("Erreur lors de l'insertion : " . $e->getMessage());
         deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
     }
