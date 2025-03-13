@@ -1,8 +1,6 @@
 <?php
 function readJoueur($linkpdo, $numLicense = null) {
     try {
-        error_log("numLicense: " . $numLicense); // Debugging
-
         if (is_null($numLicense)) {
             $requete = "SELECT * FROM `JOUEURS`";
             $req = $linkpdo->prepare($requete);
