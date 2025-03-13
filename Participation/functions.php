@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heure = null) {
     try {
         if (is_null($numLicense) && is_null($dateMatch) && is_null($heure)) {
@@ -41,19 +45,6 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
 
     try {
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
-        error_log("Requête SQL: " . $requete);       
-        error_log("Paramètres: " . json_encode([
-            "numLicense" => $numLicense,
-            "dateMatch" => $dateMatch,
-            "heure" => $heure,
-            "estTitulaire" => $estTitulaire,
-            "endurance" => $endurance,
-            "vitesse" => $vitesse,
-            "defense" => $defense,
-            "tirs" => $tirs,
-            "passes" => $passes,
-            "poste" => $poste
-        ]));
         $req = $linkpdo->prepare($requete);
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
         $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
@@ -68,9 +59,9 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
  
         $req->execute();
 
-        deliver_response(201, "success", "Donnée créée avec succès", [
+        (201, "success", "Donnée créée avec succès", [
             "numLicense" => $numLicense,
-            "dateMatch" => $dateMatch,
+            "datedeliver_responseMatch" => $dateMatch,
             "heure" => $heure,
             "estTitulaire" => $estTitulaire,
             "endurance" => $endurance,
