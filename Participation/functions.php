@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heure = null) {
     try {
@@ -73,7 +70,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion : " . $e->getMessage());
-        deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
+        deliver_response(501, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
     }
 }
 
