@@ -41,19 +41,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
 
     try {
         $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
-        error_log("Requête SQL: " . $requete);
-        $req = $linkpdo->prepare($requete);
-        $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
-        $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
-        $req->bindParam(':heure', $heure, PDO::PARAM_STR);
-        $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_STR);
-        $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
-        
+        error_log("Requête SQL: " . $requete);       
         error_log("Paramètres: " . json_encode([
             "numLicense" => $numLicense,
             "dateMatch" => $dateMatch,
@@ -66,6 +54,18 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
             "passes" => $passes,
             "poste" => $poste
         ]));
+        $req = $linkpdo->prepare($requete);
+        $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
+        $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
+        $req->bindParam(':heure', $heure, PDO::PARAM_STR);
+        $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_STR);
+        $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
+        $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
+ 
         $req->execute();
 
         deliver_response(201, "success", "Donnée créée avec succès", [
