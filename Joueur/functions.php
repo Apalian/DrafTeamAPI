@@ -16,7 +16,7 @@ function readJoueur($linkpdo, $numLicense = null) {
         if ($resquery) {
             deliver_response(200, "success", "Données récupérées avec succès.", $resquery);
         } else {
-            deliver_response(404, "error", "Aucune donnée trouvée.");
+            deliver_response(404, "error", "Aucune donnée trouvée. " . $req);
         }
     } catch (PDOException $e) {
         error_log("Erreur lors de la récupération : " . $e->getMessage());
