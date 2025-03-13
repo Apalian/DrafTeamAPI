@@ -68,18 +68,19 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         error_log("heure: " . $heure);
         $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
         error_log("estTitulaire: " . $estTitulaire);
-        $req->bindParam(':endurance', $endurance ?? null, PDO::PARAM_INT);
+        $req->bindValue(':endurance', $endurance ?? null, PDO::PARAM_INT);
         error_log("endurance: " . $endurance);
-        $req->bindParam(':vitesse', $vitesse ?? null, PDO::PARAM_INT);
+        $req->bindValue(':vitesse', $vitesse ?? null, PDO::PARAM_INT);
         error_log("vitesse: " . $vitesse);
-        $req->bindParam(':defense', $defense ?? null, PDO::PARAM_INT);
+        $req->bindValue(':defense', $defense ?? null, PDO::PARAM_INT);
         error_log("defense: " . $defense);
-        $req->bindParam(':tirs', $tirs ?? null, PDO::PARAM_INT);
+        $req->bindValue(':tirs', $tirs ?? null, PDO::PARAM_INT);
         error_log("tirs: " . $tirs);
-        $req->bindParam(':passes', $passes ?? null, PDO::PARAM_INT);
+        $req->bindValue(':passes', $passes ?? null, PDO::PARAM_INT);
         error_log("passes: " . $passes);
-        $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
+        $req->bindValue(':poste', $poste ?? null, PDO::PARAM_STR);
         error_log("poste: " . $poste);
+
  
         $req->execute();
         error_log("Donnée créée avec succès");
