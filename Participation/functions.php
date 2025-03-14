@@ -40,7 +40,7 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
 
 
 function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste) {
-    if (empty($numLicense) || empty($dateMatch) || empty($heure) || ($estTitulaire !== 0 && $estTitulaire !== 1)) {
+    if (empty($numLicense) || empty($dateMatch) || empty($heure) || (empty($estTitulaire) && $estTitulaire != 0)) {
         deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire manquant");
         return;
     }
