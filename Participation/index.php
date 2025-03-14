@@ -3,8 +3,8 @@ require_once '../connexionDB.php';
 require_once 'functions.php';
 require_once '../check_token.php';
 
-header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
+header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
