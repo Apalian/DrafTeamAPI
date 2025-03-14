@@ -39,39 +39,47 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
 }
 
 
-function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste) {
+function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste)
+{
+    // Vérification des paramètres obligatoires
     if (empty($numLicense) || empty($dateMatch) || empty($heure) || (empty($estTitulaire) && $estTitulaire != 0)) {
         deliver_response(400, "error", "Paramètre numLicense, dateMatch, heure, estTitulaire manquant");
         return;
     }
 
     try {
-        $requete = "INSERT INTO `PARTICIPATION` (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste) VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
+        $requete = "INSERT INTO `PARTICIPATION`
+                    (numLicense, dateMatch, heure, estTitulaire, endurance, vitesse, defense, tirs, passes, poste)
+                    VALUES (:numLicense, :dateMatch, :heure, :estTitulaire, :endurance, :vitesse, :defense, :tirs, :passes, :poste)";
+
         $req = $linkpdo->prepare($requete);
-        $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
-        $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);  
-        $req->bindParam(':heure', $heure, PDO::PARAM_STR);
-        $req->bindParam(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
-        $req->bindParam(':endurance', $endurance ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':defense', $defense ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':tirs', $tirs ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':passes', $passes ?? 0, PDO::PARAM_INT);
-        $req->bindParam(':poste', $poste ?? null, PDO::PARAM_STR);
- 
+
+        // Utilisation de bindValue() au lieu de bindParam()
+        $req->bindValue(':numLicense', $numLicense, PDO::PARAM_STR);
+        $req->bindValue(':dateMatch', $dateMatch, PDO::PARAM_STR);
+        $req->bindValue(':heure', $heure, PDO::PARAM_STR);
+        $req->bindValue(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
+        $req->bindValue(':endurance', $endurance ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':defense', $defense ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':tirs', $tirs ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':passes', $passes ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':poste', $poste ?? null, PDO::PARAM_STR);
+
         $req->execute();
 
+        // Réponse de succès
         deliver_response(201, "success", "Donnée créée avec succès", [
-            "numLicense" => $numLicense,
-            "dateMatch" => $dateMatch,
-            "heure" => $heure,
-            "estTitulaire" => $estTitulaire,
-            "endurance" => $endurance,
-            "vitesse" => $vitesse,
-            "defense" => $defense,
-            "tirs" => $tirs,
-            "passes" => $passes,
-            "poste" => $poste
+            "numLicense"    => $numLicense,
+            "dateMatch"     => $dateMatch,
+            "heure"         => $heure,
+            "estTitulaire"  => $estTitulaire,
+            "endurance"     => $endurance,
+            "vitesse"       => $vitesse,
+            "defense"       => $defense,
+            "tirs"          => $tirs,
+            "passes"        => $passes,
+            "poste"         => $poste
         ]);
     } catch (Exception $e) {
         error_log("Erreur lors de l'insertion : " . $e->getMessage());
