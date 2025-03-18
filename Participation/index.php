@@ -1,7 +1,13 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../connexionDB.php';
-require_once 'functions.php';
+require_once 'functions.php';      // => contient readParticipation, etc.
 require_once '../check_token.php';
+
+$secret = 'your-256-bit-secret';
 
 header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
 header("Content-Type: application/json");
@@ -14,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$secret = 'your-256-bit-secret';
-
+// Vérifier le token JWT
 $jwt = get_bearer_token();
 if (!$jwt || !checkTokenValidity($jwt)) {
     http_response_code(401);
@@ -27,64 +32,56 @@ if (!$jwt || !checkTokenValidity($jwt)) {
     exit();
 }
 
+// Décoder le payload pour obtenir le rôle
 $payload = json_decode(base64_decode(explode('.', $jwt)[1]), true);
 $userRole = $payload['role'] ?? null;
 
-// Paramètres GET pour identifier la ressource
-$numLicense = isset($_GET['numLicense']) ? intval($_GET['numLicense']) : null;
-$dateMatch  = isset($_GET['dateMatch'])  ? $_GET['dateMatch']            : null;
-$heure      = isset($_GET['heure'])      ? $_GET['heure']                : null;
+// Récupération des paramètres GET
+$numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
+$dateMatch  = isset($_GET['dateMatch'])  ? $_GET['dateMatch']  : null;
+$heure      = isset($_GET['heure'])      ? $_GET['heure']      : null;
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        // On appelle directement la fonction, 
-        // sans echo, car deliver_response() est déjà dedans.
+        // Pas de echo => la fonction readParticipation appelle déjà deliver_response(...)
         readParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
 
     case 'POST':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
-            deliver_response(403, "error", 
-                "Accès refusé. Vous devez être administrateur pour ajouter une participation."
-            );
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Administrateur requis pour ajouter une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
 
-        $numLicense    = $input['numLicense']       ?? null;
-        $dateMatch     = $input['dateMatch']        ?? null;
-        $heure         = $input['heure']            ?? null;
-        $estTitulaire  = $input['estTitulaire']     ?? null;
-        $endurance     = $input['endurance']        ?? null;
-        $vitesse       = $input['vitesse']          ?? null;
-        $defense       = $input['defense']          ?? null;
-        $tirs          = $input['tirs']             ?? null;
-        $passes        = $input['passes']           ?? null;
-        $poste         = $input['poste']            ?? null;
-
-        // Appel direct
         writeParticipation(
-            $linkpdo, 
-            $numLicense, 
-            $dateMatch, 
-            $heure, 
-            $estTitulaire, 
-            $endurance, 
-            $vitesse, 
-            $defense, 
-            $tirs, 
-            $passes, 
-            $poste
+            $linkpdo,
+            $input['numLicense']        ?? null,
+            $input['dateMatch']         ?? null,
+            $input['heure']             ?? null,
+            $input['estTitulaire']      ?? null,
+            $input['endurance']         ?? null,
+            $input['vitesse']           ?? null,
+            $input['defense']           ?? null,
+            $input['tirs']              ?? null,
+            $input['passes']            ?? null,
+            $input['poste']             ?? null
         );
         break;
 
     case 'PATCH':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
-            deliver_response(403, "error", 
-                "Accès refusé. Vous devez être administrateur pour modifier une participation."
-            );
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Administrateur requis pour modifier une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
@@ -92,65 +89,66 @@ switch ($_SERVER['REQUEST_METHOD']) {
         patchParticipation(
             $linkpdo,
             $numLicense,
-            isset($input['dateMatch']) ? $input['dateMatch'] : null,
-            isset($input['heure'])     ? $input['heure']     : null,
-            isset($input['estTitulaire']) ? $input['estTitulaire'] : null,
-            isset($input['endurance'])   ? $input['endurance']   : null,
-            isset($input['vitesse'])     ? $input['vitesse']     : null,
-            isset($input['defense'])     ? $input['defense']     : null,
-            isset($input['tirs'])        ? $input['tirs']        : null,
-            isset($input['passes'])      ? $input['passes']      : null,
-            isset($input['poste'])       ? $input['poste']       : null
+            $dateMatch,
+            $heure,
+            $input['estTitulaire']      ?? null,
+            $input['endurance']         ?? null,
+            $input['vitesse']           ?? null,
+            $input['defense']           ?? null,
+            $input['tirs']              ?? null,
+            $input['passes']            ?? null,
+            $input['poste']             ?? null
         );
         break;
 
     case 'PUT':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
-            deliver_response(403, "error", 
-                "Accès refusé. Vous devez être administrateur pour remplacer une participation."
-            );
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Administrateur requis pour remplacer une participation."
+            ]);
             exit();
         }
         $input = json_decode(file_get_contents("php://input"), true);
 
         putParticipation(
-            $linkpdo, 
-            $numLicense, 
-            $input['dateMatch'], 
-            $input['heure'], 
-            $input['estTitulaire'], 
-            $input['endurance'], 
-            $input['vitesse'], 
-            $input['defense'], 
-            $input['tirs'], 
-            $input['passes'], 
-            $input['poste']
+            $linkpdo,
+            $numLicense,
+            $dateMatch,
+            $heure,
+            $input['estTitulaire']      ?? null,
+            $input['endurance']         ?? null,
+            $input['vitesse']           ?? null,
+            $input['defense']           ?? null,
+            $input['tirs']              ?? null,
+            $input['passes']            ?? null,
+            $input['poste']             ?? null
         );
         break;
 
     case 'DELETE':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
-            deliver_response(403, "error", 
-                "Accès refusé. Vous devez être administrateur pour supprimer une participation."
-            );
+            echo json_encode([
+                "status" => "error",
+                "status_code" => 403,
+                "status_message" => "Accès refusé. Administrateur requis pour supprimer une participation."
+            ]);
             exit();
         }
-        deleteParticipation($linkpdo, $numLicense, $dateMatch, $heure);
-        break;
 
-    case 'OPTIONS':
-        // Réponse OK pour la requête preflight
-        http_response_code(204);
+        // On peut gérer la suppression d'une ou toutes les participations d'un match
+        deleteParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
 
     default:
         http_response_code(405);
-        deliver_response(
-            405,
-            "error",
-            "Méthode non autorisée"
-        );
+        echo json_encode([
+            "status" => "error",
+            "status_code" => 405,
+            "status_message" => "Méthode non autorisée"
+        ]);
         break;
 }
