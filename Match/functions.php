@@ -56,7 +56,7 @@ function writeMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencon
 }
 
 
-function patchMatch($linkpdo, $dateMatch, $heure = null, $nomEquipeAdverse = null, $LieuRencontre = null, $scoreEquipeDomicile = null, $scoreEquipeExterne = null) {
+function patchMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse = null, $LieuRencontre = null, $scoreEquipeDomicile = null, $scoreEquipeExterne = null) {
     if (empty($dateMatch)  || empty($heure)) {
         deliver_response(400, "error", "Paramètre dateMatch, heure manquant");
         return;

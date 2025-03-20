@@ -22,13 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Vérifier le token JWT
 $jwt = get_bearer_token();
-if (!$jwt || !checkTokenValidity($jwt)) {
+if (!$jwt) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "status_code" => 400, "status_message" => "[Drafteam API] : BAD REQUEST"]);
+    exit();
+}
+if (!checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode([
-        "status" => "error",
-        "status_code" => 401,
-        "status_message" => "Token JWT invalide ou manquant."
-    ]);
+    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide"]);
     exit();
 }
 
@@ -41,9 +42,29 @@ $numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
 $dateMatch  = isset($_GET['dateMatch'])  ? $_GET['dateMatch']  : null;
 $heure      = isset($_GET['heure'])      ? $_GET['heure']      : null;
 
+// Validation des paramètres obligatoires pour les méthodes autres que GET
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && (!$numLicense || !$dateMatch || !$heure)) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 400,
+        "status_message" => "[Drafteam API] : Le numéro de licence, la date et l'heure du match sont requis"
+    ]);
+    exit;
+}
+
+// Récupération des données du body pour les méthodes POST, PUT, PATCH
+$input = json_decode(file_get_contents("php://input"), true);
+$estTitulaire = isset($input['estTitulaire']) ? $input['estTitulaire'] : null;
+$endurance = isset($input['endurance']) ? $input['endurance'] : null;
+$vitesse = isset($input['vitesse']) ? $input['vitesse'] : null;
+$defense = isset($input['defense']) ? $input['defense'] : null;
+$tirs = isset($input['tirs']) ? $input['tirs'] : null;
+$passes = isset($input['passes']) ? $input['passes'] : null;
+$poste = isset($input['poste']) ? $input['poste'] : null;
+
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        // Pas de echo => la fonction readParticipation appelle déjà deliver_response(...)
         readParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
 
@@ -61,16 +82,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         writeParticipation(
             $linkpdo,
-            $input['numLicense']        ?? null,
-            $input['dateMatch']         ?? null,
-            $input['heure']             ?? null,
-            $input['estTitulaire']      ?? null,
-            $input['endurance']         ?? null,
-            $input['vitesse']           ?? null,
-            $input['defense']           ?? null,
-            $input['tirs']              ?? null,
-            $input['passes']            ?? null,
-            $input['poste']             ?? null
+            $numLicense,
+            $dateMatch,
+            $heure,
+            $estTitulaire,
+            $endurance,
+            $vitesse,
+            $defense,
+            $tirs,
+            $passes,
+            $poste
         );
         break;
 
@@ -91,13 +112,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $numLicense,
             $dateMatch,
             $heure,
-            $input['estTitulaire']      ?? null,
-            $input['endurance']         ?? null,
-            $input['vitesse']           ?? null,
-            $input['defense']           ?? null,
-            $input['tirs']              ?? null,
-            $input['passes']            ?? null,
-            $input['poste']             ?? null
+            $estTitulaire,
+            $endurance,
+            $vitesse,
+            $defense,
+            $tirs,
+            $passes,
+            $poste
         );
         break;
 
@@ -118,13 +139,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $numLicense,
             $dateMatch,
             $heure,
-            $input['estTitulaire']      ?? null,
-            $input['endurance']         ?? null,
-            $input['vitesse']           ?? null,
-            $input['defense']           ?? null,
-            $input['tirs']              ?? null,
-            $input['passes']            ?? null,
-            $input['poste']             ?? null
+            $estTitulaire,
+            $endurance,
+            $vitesse,
+            $defense,
+            $tirs,
+            $passes,
+            $poste
         );
         break;
 

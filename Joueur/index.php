@@ -19,21 +19,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Récupération des paramètres
+$numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
+
+// Validation du numLicense pour les méthodes autres que GET
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$numLicense) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 400,
+        "status_message" => "[Drafteam API] : Le numéro de licence est requis"
+    ]);
+    exit;
+}
+
+// Vérification du token
+$headers = getallheaders();
+$token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
 
 $jwt = get_bearer_token();
-if (!$jwt || !checkTokenValidity($jwt)) {
+if (!$jwt) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "status_code" => 400, "status_message" => "[Drafteam API] : BAD REQUEST"]);
+    exit();
+}
+if (!checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide ou manquant."]);
+    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide"]);
     exit();
 }
 
 $payload = json_decode(base64_decode(explode('.', $jwt)[1]), true);
 $userRole = $payload['role'] ?? null;
 
-$numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
 
+// Récupération des données du body pour les méthodes POST, PUT, PATCH
+$input = json_decode(file_get_contents("php://input"), true);
+$nom = isset($input['nom']) ? $input['nom'] : null;
+$prenom = isset($input['prenom']) ? $input['prenom'] : null;
+$dateNaissance = isset($input['dateNaissance']) ? $input['dateNaissance'] : null;
+$commentaire = isset($input['commentaire']) ? $input['commentaire'] : null;
+$statut = isset($input['statut']) ? $input['statut'] : null;
+$taille = isset($input['taille']) ? $input['taille'] : null;
+$poids = isset($input['poids']) ? $input['poids'] : null;
 
 switch ($_SERVER['REQUEST_METHOD']){
     case 'GET' :
@@ -45,15 +75,6 @@ switch ($_SERVER['REQUEST_METHOD']){
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour ajouter un joueur."]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-        $nom = $input['nom'];
-        $prenom = isset($input['prenom']) ? $input['prenom'] : null;
-        $dateNaissance = isset($input['dateNaissance']) ? $input['dateNaissance'] : null;
-        $commentaire = isset($input['commentaire']) ? $input['commentaire'] : null;
-        $statut = isset($input['statut']) ? $input['statut'] : null;
-        $taille = isset($input['taille']) ? $input['taille'] : null;
-        $poids = isset($input['poids']) ? $input['poids'] : null;
-
         echo writeJoueur($linkpdo, $numLicense, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
         break;
     case 'PATCH' :
@@ -62,20 +83,16 @@ switch ($_SERVER['REQUEST_METHOD']){
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour modifier un joueur."]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-        echo patchJoueur($linkpdo, $numLicense, isset($input['nom']) ? $input['nom'] : null, isset($input['prenom']) ? $input['prenom'] : null, isset($input['dateNaissance']) ? $input['dateNaissance'] : null, isset($input['commentaire']) ? $input['commentaire'] : null, isset($input['statut']) ? $input['statut'] : null, isset($input['taille']) ? $input['taille'] : null, isset($input['poids']) ? $input['poids'] : null);
+        echo patchJoueur($linkpdo, $numLicense, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
         break;
-
     case 'PUT':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
             echo json_encode(["status" => "error", "status_code" => 403, "status_message" => "Accès refusé. Vous devez être administrateur pour remplacer un joueur."]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-        echo putJoueur($linkpdo, $numLicense, $input['nom'], $input['prenom'], $input['dateNaissance'], $input['commentaire'], $input['statut'], $input['taille'], $input['poids']);
+        echo putJoueur($linkpdo, $numLicense, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
         break;
-
     case 'DELETE':
         if ($userRole !== 'administrateur') {
             http_response_code(403);
@@ -84,7 +101,6 @@ switch ($_SERVER['REQUEST_METHOD']){
         }
         echo deleteJoueur($linkpdo, $numLicense);
         break;
-
     default:
         http_response_code(405);
         echo json_encode(["status" => "error", "status_code" => 405, "status_message" => "Méthode non autorisée"], JSON_PRETTY_PRINT);

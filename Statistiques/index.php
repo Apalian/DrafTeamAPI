@@ -9,7 +9,7 @@ $secret = 'your-256-bit-secret';
 // Configuration CORS
 header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Max-Age: 3600");
@@ -23,13 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Vérifier le token JWT (sauf pour OPTIONS)
 $jwt = get_bearer_token();
-if (!$jwt || !checkTokenValidity($jwt)) {
+if (!$jwt) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "status_code" => 400, "status_message" => "[Drafteam API] : BAD REQUEST"]);
+    exit();
+}
+if (!checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode([
-        "status" => "error",
-        "status_code" => 401,
-        "status_message" => "Token JWT invalide ou manquant."
-    ]);
+    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide"]);
     exit();
 }
 

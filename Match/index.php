@@ -23,13 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Vérifier le token JWT
 $jwt = get_bearer_token();
-if (!$jwt || !checkTokenValidity($jwt)) {
+if (!$jwt) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "status_code" => 400, "status_message" => "[Drafteam API] : BAD REQUEST"]);
+    exit();
+}
+if (!checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode([
-        "status" => "error",
-        "status_code" => 401,
-        "status_message" => "Token JWT invalide ou manquant."
-    ]);
+    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide"]);
     exit();
 }
 
@@ -39,6 +40,24 @@ $userRole = $payload['role'] ?? null;
 
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
+
+// Validation de dateMatch et heure pour les méthodes autres que GET
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && (!$dateMatch || !$heure)) {
+    http_response_code(400);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 400,
+        "status_message" => "[Drafteam API] : La date et l'heure du match sont requises"
+    ]);
+    exit;
+}
+
+// Récupération des données du body pour les méthodes POST, PUT, PATCH
+$input = json_decode(file_get_contents("php://input"), true);
+$nomEquipeAdverse = isset($input['nomEquipeAdverse']) ? $input['nomEquipeAdverse'] : null;
+$LieuRencontre = isset($input['LieuRencontre']) ? $input['LieuRencontre'] : null;
+$scoreEquipeDomicile = isset($input['scoreEquipeDomicile']) ? $input['scoreEquipeDomicile'] : null;
+$scoreEquipeExterne = isset($input['scoreEquipeExterne']) ? $input['scoreEquipeExterne'] : null;
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
@@ -54,14 +73,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-        $dateMatch = $input['dateMatch'];
-        $heure = isset($input['heure']) ? $input['heure'] : null;
-        $nomEquipeAdverse = isset($input['nomEquipeAdverse']) ? $input['nomEquipeAdverse'] : null;
-        $LieuRencontre = isset($input['LieuRencontre']) ? $input['LieuRencontre'] : null;
-        $scoreEquipeDomicile = isset($input['scoreEquipeDomicile']) ? $input['scoreEquipeDomicile'] : null;
-        $scoreEquipeExterne = isset($input['scoreEquipeExterne']) ? $input['scoreEquipeExterne'] : null;
-
         echo writeMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencontre, $scoreEquipeDomicile, $scoreEquipeExterne);
         break;
     case 'PATCH':
@@ -74,15 +85,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
         echo patchMatch(
             $linkpdo, 
             $dateMatch, 
-            isset($input['heure']) ? $input['heure'] : null, 
-            isset($input['nomEquipeAdverse']) ? $input['nomEquipeAdverse'] : null, 
-            isset($input['LieuRencontre']) ? $input['LieuRencontre'] : null, 
-            isset($input['scoreEquipeDomicile']) ? $input['scoreEquipeDomicile'] : null, 
-            isset($input['scoreEquipeExterne']) ? $input['scoreEquipeExterne'] : null
+            $heure,
+            $nomEquipeAdverse, 
+            $LieuRencontre, 
+            $scoreEquipeDomicile, 
+            $scoreEquipeExterne
         );
         break;
     case 'PUT':
@@ -95,13 +105,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-        $dateMatch = $input['dateMatch'];
-        $heure = isset($input['heure']) ? $input['heure'] : null;
-        $nomEquipeAdverse = isset($input['nomEquipeAdverse']) ? $input['nomEquipeAdverse'] : null;
-        $LieuRencontre = isset($input['LieuRencontre']) ? $input['LieuRencontre'] : null;
-        $scoreEquipeDomicile = isset($input['scoreEquipeDomicile']) ? $input['scoreEquipeDomicile'] : null;
-        $scoreEquipeExterne = isset($input['scoreEquipeExterne']) ? $input['scoreEquipeExterne'] : null;
         echo putMatch($linkpdo, $dateMatch, $heure, $nomEquipeAdverse, $LieuRencontre, $scoreEquipeDomicile, $scoreEquipeExterne);
         break;
     case 'DELETE':
