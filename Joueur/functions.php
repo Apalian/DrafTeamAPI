@@ -2,7 +2,7 @@
 function readJoueur($linkpdo, $numLicense = null) {
     try {
         if (is_null($numLicense)) {
-            $requete = "SELECT * FROM `JOUEURS`";
+            $requete = "SELECT * FROM `JOUEURS` ORDER BY 1";
             $req = $linkpdo->prepare($requete);
         } else {
             $requete = "SELECT * FROM `JOUEURS` WHERE numLicense = :numLicense";
