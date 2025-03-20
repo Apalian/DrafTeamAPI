@@ -43,7 +43,6 @@ function writeJoueur($linkpdo, $numLicense, $nom, $prenom, $dateNaissance, $comm
         $req->bindParam(':taille', $taille, PDO::PARAM_INT);
         $req->bindParam(':poids', $poids, PDO::PARAM_INT);
         $req->execute();
-        error_log($requete);
         deliver_response(201, "success", "Donnée créée avec succès", [
             "numLicense" => $numLicense,
             "nom" => $nom,
