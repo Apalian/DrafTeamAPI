@@ -54,7 +54,7 @@ switch ($_SERVER['REQUEST_METHOD']){
         $taille = isset($input['taille']) ? $input['taille'] : null;
         $poids = isset($input['poids']) ? $input['poids'] : null;
 
-        echo writeJoueur($linkpdo, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
+        echo writeJoueur($linkpdo, $numLicense, $nom, $prenom, $dateNaissance, $commentaire, $statut, $taille, $poids);
         break;
     case 'PATCH' :
         if ($userRole !== 'administrateur') {
