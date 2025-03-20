@@ -141,6 +141,19 @@ function deleteJoueur($linkpdo, $numLicense){
         return;
     }
     try{
+        // Vérifier si le joueur est lié à des matchs
+        $checkRequete = "SELECT COUNT(*) as count FROM `PARTICIPATION` WHERE numLicense = :numLicense";
+        $checkReq = $linkpdo->prepare($checkRequete);
+        $checkReq->bindParam(':numLicense', $numLicense, PDO::PARAM_INT);
+        $checkReq->execute();
+        $result = $checkReq->fetch(PDO::FETCH_ASSOC);
+
+        if ($result['count'] > 0) {
+            deliver_response(403, "error", "Impossible de supprimer ce joueur car il est lié à des matchs");
+            return;
+        }
+
+        // Si le joueur n'est pas lié à des matchs, on peut le supprimer
         $requete = "DELETE FROM `JOUEURS` WHERE numLicense = :numLicense";
         $req = $linkpdo->prepare($requete);
         $req->bindParam(':numLicense', $numLicense, PDO::PARAM_INT);
@@ -149,7 +162,6 @@ function deleteJoueur($linkpdo, $numLicense){
             deliver_response(200, "success", "Données numLicense:$numLicense supprimée avec succès.");
         } else {
             deliver_response(404, "error", "Aucune donnée trouvée");
-
         }
     } catch (PDOException $e) {
         deliver_response(500, "fatal error", "Erreur : " . $e->getMessage());
