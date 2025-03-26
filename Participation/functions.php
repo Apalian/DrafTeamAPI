@@ -36,6 +36,11 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
 
 function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste)
 {
+    // Nettoyage des espaces éventuels
+    $numLicense = trim($numLicense);
+    $dateMatch = trim($dateMatch);
+    $heure = trim($heure);
+
     if (empty($numLicense) || empty($dateMatch) || empty($heure) 
         || ($estTitulaire === null)) {
         deliver_response(400, "error", "Paramètres obligatoires manquants (numLicense, dateMatch, heure, estTitulaire).");
@@ -51,17 +56,16 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         $req->bindValue(':numLicense', $numLicense, PDO::PARAM_STR);
         $req->bindValue(':dateMatch', $dateMatch, PDO::PARAM_STR);
         $req->bindValue(':heure', $heure, PDO::PARAM_STR);
-        $req->bindValue(':estTitulaire', $estTitulaire, PDO::PARAM_INT);
-        $req->bindValue(':endurance', $endurance ?? 0, PDO::PARAM_INT);
-        $req->bindValue(':vitesse', $vitesse ?? 0, PDO::PARAM_INT);
-        $req->bindValue(':defense', $defense ?? 0, PDO::PARAM_INT);
-        $req->bindValue(':tirs', $tirs ?? 0, PDO::PARAM_INT);
-        $req->bindValue(':passes', $passes ?? 0, PDO::PARAM_INT);
+        $req->bindValue(':estTitulaire', (int)$estTitulaire, PDO::PARAM_INT);
+        $req->bindValue(':endurance', (int)($endurance ?? 0), PDO::PARAM_INT);
+        $req->bindValue(':vitesse', (int)($vitesse ?? 0), PDO::PARAM_INT);
+        $req->bindValue(':defense', (int)($defense ?? 0), PDO::PARAM_INT);
+        $req->bindValue(':tirs', (int)($tirs ?? 0), PDO::PARAM_INT);
+        $req->bindValue(':passes', (int)($passes ?? 0), PDO::PARAM_INT);
         $req->bindValue(':poste', $poste ?? null, PDO::PARAM_STR);
 
         $req->execute();
 
-        // Réponse de succès
         deliver_response(201, "success", "Participation créée avec succès", [
             "numLicense"    => $numLicense,
             "dateMatch"     => $dateMatch,
@@ -78,6 +82,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
     }
 }
+
 
 /**
  * PATCH = mise à jour partielle
