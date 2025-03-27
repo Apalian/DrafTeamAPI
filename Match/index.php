@@ -1,9 +1,4 @@
 <?php
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../connexionDB.php';
 require_once 'functions.php';
 require_once '../check_token.php';
@@ -40,6 +35,7 @@ $userRole = $payload['role'] ?? null;
 
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
+error_log($dateMatch.':'.$heure);
 
 // Validation de dateMatch et heure pour les méthodes autres que GET
 if ($_SERVER['REQUEST_METHOD'] !== 'GET' && (!$dateMatch || !$heure)) {
