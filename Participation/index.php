@@ -41,7 +41,7 @@ $userRole = $payload['role'] ?? null;
 $numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
 $dateMatch  = isset($_GET['dateMatch'])  ? $_GET['dateMatch']  : null;
 $heure      = isset($_GET['heure'])      ? $_GET['heure']      : null;
-error_log($numLicense."--".$dateMatch.":".$heure)
+error_log($numLicense."--".$dateMatch.":".$heure);
 // Validation des paramètres obligatoires pour les méthodes autres que GET
 // Validation des paramètres obligatoires selon la méthode
 if (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT', 'DELETE']) && (!$numLicense || !$dateMatch || !$heure)) {
