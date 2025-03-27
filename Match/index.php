@@ -35,11 +35,10 @@ $userRole = $payload['role'] ?? null;
 
 $dateMatch = isset($_GET['dateMatch']) ? $_GET['dateMatch'] : null;
 $heure = isset($_GET['heure']) ? $_GET['heure'] : null;
-error_log($dateMatch.':'.$heure);
+
 
 // Validation de dateMatch et heure pour les méthodes autres que GET
 if ($_SERVER['REQUEST_METHOD'] !== 'GET' && (!$dateMatch || !$heure)) {
-    error_log("test");
     http_response_code(400);
     echo json_encode([
         "status" => "error",
