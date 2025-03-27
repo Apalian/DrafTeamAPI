@@ -5,7 +5,7 @@ require_once '../check_token.php';
 
 $secret = 'your-256-bit-secret';
 
-header("Access-Control-Allow-Origin: https://drafteam.lespi.fr");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
