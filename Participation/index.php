@@ -54,21 +54,6 @@ if (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT', 'DELETE']) && (!$numLi
     exit;
 }
 
-// Pour POST, validation des paramètres du body JSON
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $input = json_decode(file_get_contents("php://input"), true);
-    if (empty($input['numLicense']) || empty($input['dateMatch']) || empty($input['heure'])) {
-        http_response_code(400);
-        echo json_encode([
-            "status" => "error",
-            "status_code" => 400,
-            "status_message" => "[Drafteam API] : Le numéro de licence, la date et l'heure du match sont requis dans le corps JSON"
-        ]);
-        exit;
-    }
-}
-
-
 // Récupération des données du body pour les méthodes POST, PUT, PATCH
 $input = json_decode(file_get_contents("php://input"), true);
 $estTitulaire = isset($input['estTitulaire']) ? $input['estTitulaire'] : null;
