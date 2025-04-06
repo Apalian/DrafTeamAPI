@@ -40,13 +40,12 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
         deliver_response(500, "fatal error", "Erreur lors de la récupération : " . $e->getMessage());
     }
 }
-
 function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitulaire, $endurance, $vitesse, $defense, $tirs, $passes, $poste)
 {
-    // Nettoyage des espaces éventuels
-    $numLicense = trim($numLicense);
-    $dateMatch = trim($dateMatch);
-    $heure = trim($heure);
+    // Nettoyage des espaces éventuels, uniquement si ce sont des chaînes
+    $numLicense = is_string($numLicense) ? trim($numLicense) : $numLicense;
+    $dateMatch  = is_string($dateMatch)  ? trim($dateMatch)  : $dateMatch;
+    $heure      = is_string($heure)      ? trim($heure)      : $heure;
 
     if (empty($numLicense) || empty($dateMatch) || empty($heure) 
         || ($estTitulaire === null)) {
@@ -89,6 +88,7 @@ function writeParticipation($linkpdo, $numLicense, $dateMatch, $heure, $estTitul
         deliver_response(500, "fatal error", "Erreur lors de l'insertion : " . $e->getMessage());
     }
 }
+
 
 
 /**
