@@ -337,7 +337,7 @@
 								"{{url_participation}}"
 							]
 						},
-						"description": "# Get Participation Details\n\nThis endpoint sends an HTTP GET request to retrieve participation details.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response\n\n- `id`: The unique identifier for the participation.\n    \n- `user_id`: The ID of the user associated with the participation.\n    \n- `event_id`: The ID of the event associated with the participation.\n    \n- `status`: The status of the participation (e.g. confirmed, pending, declined).\n    \n- `created_at`: The timestamp when the participation was created.\n    \n- `updated_at`: The timestamp when the participation was last updated."
+						"description": "### **Description**\n\nRécupere toutes les participations présentes dans la base de données\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"numLicense\": \"1090634S\",\n            \"dateMatch\": \"2020-03-21\",\n            \"heure\": \"15:05:16\",\n            \"estTitulaire\": 0,\n            \"endurance\": 87,\n            \"vitesse\": 80,\n            \"defense\": 77,\n            \"tirs\": 90,\n            \"passes\": 84,\n            \"poste\": \"Ailier droit\"\n        },\n        {\n            \"numLicense\": \"1090634S\",\n            \"dateMatch\": \"2020-07-14\",\n            \"heure\": \"05:33:43\",\n            \"estTitulaire\": 0,\n            \"endurance\": 88,\n            \"vitesse\": 85,\n            \"defense\": 80,\n            \"tirs\": 78,\n            \"passes\": 81,\n            \"poste\": \"Pivot\"\n        },\n        ...\n    ]\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -396,11 +396,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url_participation}}",
+							"raw": "{{url_participation}}?numLicense=1090634S&dateMatch=2020-03-21&heure=15:05:16",
 							"host": [
 								"{{url_participation}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "1090634S"
+								},
+								{
+									"key": "dateMatch",
+									"value": "2020-03-21"
+								},
+								{
+									"key": "heure",
+									"value": "15:05:16"
+								}
 							]
-						}
+						},
+						"description": "## Description\n\nRécupere les informations de la participation dont le numéro de licence, l'heure et la date sont passés en paramètre.\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"numLicense\": \"1090634S\",\n            \"dateMatch\": \"2020-03-21\",\n            \"heure\": \"15:05:16\",\n            \"estTitulaire\": 0,\n            \"endurance\": 87,\n            \"vitesse\": 80,\n            \"defense\": 77,\n            \"tirs\": 90,\n            \"passes\": 84,\n            \"poste\": \"Ailier droit\"\n        }\n    ]\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -415,7 +430,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"phrase\" : \"La nouvelle phrase\"\r\n}",
+							"raw": "{\r\n    \"estTitulaire\": 1,\r\n    \"endurance\": 87,\r\n    \"vitesse\": 80,\r\n    \"defense\": 77,\r\n    \"tirs\": 90,\r\n    \"passes\": 84,\r\n    \"poste\": \"Ailier droit\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -423,11 +438,26 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_participation}}",
+							"raw": "{{url_participation}}?numLicense=3705547V&dateMatch=2020-03-21&heure=15:05:16",
 							"host": [
 								"{{url_participation}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "3705547V"
+								},
+								{
+									"key": "dateMatch",
+									"value": "2020-03-21"
+								},
+								{
+									"key": "heure",
+									"value": "15:05:16"
+								}
 							]
-						}
+						},
+						"description": "### Description\n\nCrée une participation dont le numéro de licence, la date et l'heure du match sont passés en paramètre de requête avec les paramètres du body.\n\n#### Requête Body\n\n| Nom du champ | Description | Type | Obligatoire | Notes |\n| --- | --- | --- | --- | --- |\n| `numLicense` | Numéro de licence du joueur | String | ✅ Oui | Correspond à un joueur déjà existant |\n| `dateMatch` | Date du match | String | ✅ Oui | Format : `YYYY-MM-DD` |\n| `heure` | Heure du match | String | ✅ Oui | Format : `HH:MM:SS` (ex: `15:05:16`) |\n| `estTitulaire` | Est titulaire | Boolean/Int (0/1) | ✅ Oui | `1` pour titulaire, `0` pour remplaçant |\n| `endurance` | Endurance du joueur | Number | ❌ Non | Valeur entre 0 et 100 |\n| `vitesse` | Vitesse du joueur | Number | ❌ Non | Valeur entre 0 et 100 |\n| `defense` | Défense du joueur | Number | ❌ Non | Valeur entre 0 et 100 |\n| `tirs` | Compétence de tir du joueur | Number | ❌ Non | Valeur entre 0 et 100 |\n| `passes` | Compétence de passe du joueur | Number | ❌ Non | Valeur entre 0 et 100 |\n| `poste` | Poste du joueur | String | ❌ Non | Exemples : `Gardien`, `Ailier droit`, `Pivot`, etc. |\n\n#### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 201,\n    \"status_message\": \"Participation créée avec succès\",\n    \"data\": {\n        \"numLicense\": \"3705547V\",\n        \"dateMatch\": \"2020-03-21\",\n        \"heure\": \"15:05:16\",\n        \"estTitulaire\": 1,\n        \"endurance\": 87,\n        \"vitesse\": 80,\n        \"defense\": 77,\n        \"tirs\": 90,\n        \"passes\": 84,\n        \"poste\": \"Ailier droit\"\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -442,7 +472,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"vote\" : 1\r\n}",
+							"raw": "{\r\n    \"estTitulaire\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -450,11 +480,26 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_participation}}",
+							"raw": "{{url_participation}}?numLicense=3705547V&dateMatch=2020-03-21&heure=15:05:16",
 							"host": [
 								"{{url_participation}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "3705547V"
+								},
+								{
+									"key": "dateMatch",
+									"value": "2020-03-21"
+								},
+								{
+									"key": "heure",
+									"value": "15:05:16"
+								}
 							]
-						}
+						},
+						"description": "## **Description**\n\nModification partielle d'une participation. Un paramètre doit nécessairement être renseigné. Si tous les paramètres sont renseignés alors se diriger vers [Modifier une participation entièrement.](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-11394dfb-472e-4e96-9347-f197f87c9a95?action=share&source=copy-link&creator=41616906&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n## **Requête Body**\n\n- estTitulaire (number): Statut du joueur (0 = remplaçant, 1 = titulaire).\n    \n- endurance (number): Endurance du joueur.\n    \n- vitesse (number): Vitesse du joueur.\n    \n- defense (number): Défense du joueur.\n    \n- tirs (number): Capacité de tir du joueur.\n    \n- passes (number): Capacité de passe du joueur.\n    \n- poste (string): Poste du joueur (ex. : Ailier droit, Pivot, Gardien...).\n    \n\n## **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Participation mise à jour (PATCH) avec succès\",\n    \"data\": {\n        \"numLicense\": \"3705547V\",\n        \"dateMatch\": \"2020-03-21\",\n        \"heure\": \"15:05:16\",\n        \"estTitulaire\": 1,\n        \"endurance\": 87,\n        \"vitesse\": 80,\n        \"defense\": 77,\n        \"tirs\": 90,\n        \"passes\": 84,\n        \"poste\": \"Ailier droit\"\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -469,7 +514,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phrase\" : \"La nouvel phrase\",\r\n    \"vote\" : 2,\r\n    \"faute\" : 1,\r\n    \"signalement\" : 0\r\n}",
+							"raw": "{\r\n        \"numLicense\": \"1090634S\",\r\n        \"dateMatch\": \"2020-03-21\",\r\n        \"heure\": \"15:05:16\",\r\n        \"estTitulaire\": 1,\r\n        \"endurance\": 87,\r\n        \"vitesse\": 80,\r\n        \"defense\": 77,\r\n        \"tirs\": 91,\r\n        \"passes\": 84,\r\n        \"poste\": \"Ailier droit\"\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -477,11 +522,26 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_participation}}",
+							"raw": "{{url_participation}}?numLicense=3705547V&dateMatch=2020-03-21&heure=15:05:16",
 							"host": [
 								"{{url_participation}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "3705547V"
+								},
+								{
+									"key": "dateMatch",
+									"value": "2020-03-21"
+								},
+								{
+									"key": "heure",
+									"value": "15:05:16"
+								}
 							]
-						}
+						},
+						"description": "## **Description**\n\nModification entière de la participation dont le numéro de licence, la date du match et l’heure sont renseignés en paramètre de la requête. Tous les paramètres doivent nécessairement être renseignés. Si tous les paramètres ne sont pas renseignés alors se diriger vers [Modifier une participation partiellement.](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-9944906d-f48b-4efc-b489-121e45d6b671?action=share&source=copy-link&creator=41616906&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n## **Requête Body**\n\n- estTitulaire (number): Statut du joueur (0 = remplaçant, 1 = titulaire).\n    \n- endurance (number): Endurance du joueur.\n    \n- vitesse (number): Vitesse du joueur.\n    \n- defense (number): Défense du joueur.\n    \n- tirs (number): Capacité de tir du joueur.\n    \n- passes (number): Capacité de passe du joueur.\n    \n- poste (string): Poste du joueur (ex. : Ailier droit, Pivot, Gardien...).\n    \n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Participation mise à jour (PUT) avec succès\",\n    \"data\": {\n        \"numLicense\": \"3705547V\",\n        \"dateMatch\": \"2020-03-21\",\n        \"heure\": \"15:05:16\",\n        \"estTitulaire\": 1,\n        \"endurance\": 87,\n        \"vitesse\": 80,\n        \"defense\": 77,\n        \"tirs\": 91,\n        \"passes\": 84,\n        \"poste\": \"Ailier droit\"\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -495,11 +555,26 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url_participation}}",
+							"raw": "{{url_participation}}?numLicense=3705547V&dateMatch=2020-03-21&heure=15:05:16",
 							"host": [
 								"{{url_participation}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "3705547V"
+								},
+								{
+									"key": "dateMatch",
+									"value": "2020-03-21"
+								},
+								{
+									"key": "heure",
+									"value": "15:05:16"
+								}
 							]
-						}
+						},
+						"description": "## Description\n\nSupprime la participation dont le numéro de licence, l'heure et la date sont ceux passés en paramètres de requête.\n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Participation (numLicense=3705547V, date=2020-03-21, heure=15:05:16) supprimée avec succès.\"\n}\n\n ```"
 					},
 					"response": []
 				}
@@ -568,7 +643,8 @@
 							"host": [
 								"{{url_match}}"
 							]
-						}
+						},
+						"description": "### **Description**\n\nRécupère tout les matchs présents dans la base de données\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"dateMatch\": \"2020-03-20\",\n            \"heure\": \"01:31:05\",\n            \"nomEquipeAdverse\": \"Conway LLC\",\n            \"lieuRencontre\": \"Domicile\",\n            \"scoreEquipeDomicile\": 34,\n            \"scoreEquipeExterne\": 35\n        },\n        {\n            \"dateMatch\": \"2020-03-21\",\n            \"heure\": \"15:05:16\",\n            \"nomEquipeAdverse\": \"Kim, Sanchez and Forbes\",\n            \"lieuRencontre\": \"Exterieur\",\n            \"scoreEquipeDomicile\": 4,\n            \"scoreEquipeExterne\": 0\n        },\n        ...\n    ]\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -627,23 +703,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url_match}}?dateMatch=2020-03-15&heure=05:09:22",
+							"raw": "{{url_match}}?dateMatch=2020-03-20&heure=01:31:05",
 							"host": [
 								"{{url_match}}"
 							],
 							"query": [
 								{
 									"key": "dateMatch",
-									"value": "2020-03-15",
-									"type": "text"
+									"value": "2020-03-20"
 								},
 								{
 									"key": "heure",
-									"value": "05:09:22",
-									"type": "text"
+									"value": "01:31:05"
 								}
 							]
-						}
+						},
+						"description": "## Description\n\nRécupere les informations du match dont l'heure et la date sont passés en paramètre.\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"dateMatch\": \"2020-03-20\",\n            \"heure\": \"01:31:05\",\n            \"nomEquipeAdverse\": \"Conway LLC\",\n            \"lieuRencontre\": \"Domicile\",\n            \"scoreEquipeDomicile\": 34,\n            \"scoreEquipeExterne\": 35\n        }\n    ]\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -658,7 +733,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"dateMatch\" : \"2025-04-12\",\r\n\"heure\" : \"20:20\"\r\n}",
+							"raw": "{\r\n    \"nomEquipeAdverse\": \"Les Aigles Rouges\",\r\n    \"LieuRencontre\": \"Gymnase Jules Ferry\",\r\n    \"scoreEquipeDomicile\": 28,\r\n    \"scoreEquipeExterne\": 24\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -666,11 +741,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_match}}",
+							"raw": "{{url_match}}?dateMatch=2029-03-20&heure=01:31:05",
 							"host": [
 								"{{url_match}}"
+							],
+							"query": [
+								{
+									"key": "dateMatch",
+									"value": "2029-03-20"
+								},
+								{
+									"key": "heure",
+									"value": "01:31:05"
+								}
 							]
-						}
+						},
+						"description": "### Description\n\nCrée une participation dont le numéro de licence, la date et l'heure du match sont passés en paramètre de requête avec les paramètres du body.\n\n#### Requête Body\n\n| Nom du champ | Description | Type | Obligatoire | Notes |\n| --- | --- | --- | --- | --- |\n| `dateMatch` | Date du match | String | ✅ Oui | Format : `YYYY-MM-DD` |\n| `heure` | Heure du match | String | ✅ Oui | Format : `HH:MM:SS` (ex: `15:30:00`) |\n| `nomEquipeAdverse` | Nom de l’équipe adverse | String | ✅ Oui | Nom libre |\n| `LieuRencontre` | Lieu de la rencontre | String | ✅ Oui | Exemple : Gymnase Jules Ferry |\n| `scoreEquipeDomicile` | Score de l’équipe à domicile | Number | ❌ Non | Peut être omis ou mis à 0 |\n| `scoreEquipeExterne` | Score de l’équipe adverse | Number | ❌ Non | Peut être omis ou mis à 0 |\n\n#### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 201,\n    \"status_message\": \"Donnée créée avec succès\",\n    \"data\": {\n        \"dateMatch\": \"2029-03-20\",\n        \"heure\": \"01:31:05\",\n        \"nomEquipeAdverse\": \"Les Aigles Rouges\",\n        \"LieuRencontre\": \"Gymnase Jules Ferry\",\n        \"scoreEquipeDomicile\": 28,\n        \"scoreEquipeExterne\": 24\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -685,7 +771,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"vote\" : 1\r\n}",
+							"raw": "{\r\n    \"nomEquipeAdverse\": \"Les Aigles pas Rouges\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -693,11 +779,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_match}}",
+							"raw": "{{url_match}}?dateMatch=2029-03-20&heure=01:31:05",
 							"host": [
 								"{{url_match}}"
+							],
+							"query": [
+								{
+									"key": "dateMatch",
+									"value": "2029-03-20"
+								},
+								{
+									"key": "heure",
+									"value": "01:31:05"
+								}
 							]
-						}
+						},
+						"description": "## **Description**\n\nModification partielle d'un match. Un paramètre doit nécessairement être renseigné. Si tous les paramètres sont renseignés alors se diriger vers [Modifier un match entièrement.](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-11394dfb-472e-4e96-9347-f197f87c9a95?action=share&source=copy-link&creator=41616906&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n## **Requête Body**\n\n- nomEquipeAdverse (string): Nom de l’équipe adverse.\n    \n- LieuRencontre (string): Lieu où se déroule la rencontre.\n    \n- scoreEquipeDomicile (number): Score de l’équipe à domicile.\n    \n- scoreEquipeExterne (number): Score de l’équipe adverse.\n    \n\n## **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données modifiées avec succès\",\n    \"data\": {\n        \"dateMatch\": \"2029-03-20\",\n        \"heure\": \"01:31:05\",\n        \"nomEquipeAdverse\": \"Les Aigles pas Rouges\",\n        \"lieuRencontre\": \"Gymnase Ju\",\n        \"scoreEquipeDomicile\": 28,\n        \"scoreEquipeExterne\": 24\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -712,7 +809,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phrase\" : \"La nouvel phrase\",\r\n    \"vote\" : 2,\r\n    \"faute\" : 1,\r\n    \"signalement\" : 0\r\n}",
+							"raw": "{\r\n    \"nomEquipeAdverse\": \"Les Aigles Rouges\",\r\n    \"LieuRencontre\": \"Gymnase Jules Ferry\",\r\n    \"scoreEquipeDomicile\": 29,\r\n    \"scoreEquipeExterne\": 24\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -720,11 +817,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_match}}",
+							"raw": "{{url_match}}?dateMatch=2029-03-20&heure=01:31:05",
 							"host": [
 								"{{url_match}}"
+							],
+							"query": [
+								{
+									"key": "dateMatch",
+									"value": "2029-03-20"
+								},
+								{
+									"key": "heure",
+									"value": "01:31:05"
+								}
 							]
-						}
+						},
+						"description": "## **Description**\n\nModification totale d'un match. Un paramètre doit nécessairement être renseigné. Si tous les paramètres sont renseignés alors se diriger vers [Modifier un match partiellement.](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-ce9b6af9-3ef8-4341-ac26-cb62ae7314d3?action=share&source=copy-link&creator=41616906&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n## **Requête Body**\n\n- nomEquipeAdverse (string): Nom de l’équipe adverse.\n    \n- LieuRencontre (string): Lieu où se déroule la rencontre.\n    \n- scoreEquipeDomicile (number): Score de l’équipe à domicile.\n    \n- scoreEquipeExterne (number): Score de l’équipe adverse.\n    \n\n## **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données modifiées avec succès\",\n    \"data\": {\n        \"dateMatch\": \"2029-03-20\",\n        \"heure\": \"01:31:05\",\n        \"nomEquipeAdverse\": \"Les Aigles Rouges\",\n        \"lieuRencontre\": \"Gymnase Ju\",\n        \"scoreEquipeDomicile\": 29,\n        \"scoreEquipeExterne\": 24\n    }\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -738,11 +846,22 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url_match}}",
+							"raw": "{{url_match}}?dateMatch=2029-03-20&heure=01:31:05",
 							"host": [
 								"{{url_match}}"
+							],
+							"query": [
+								{
+									"key": "dateMatch",
+									"value": "2029-03-20"
+								},
+								{
+									"key": "heure",
+									"value": "01:31:05"
+								}
 							]
-						}
+						},
+						"description": "## Description\n\nSupprime le match l'heure et la date sont ceux passés en paramètres de requête.\n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données dateMatch:2029-03-20 et heure:01:31:05 supprimée avec succès.\"\n}\n\n ```"
 					},
 					"response": []
 				}
