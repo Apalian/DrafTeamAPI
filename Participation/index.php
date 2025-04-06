@@ -24,12 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $jwt = get_bearer_token();
 if (!$jwt) {
     http_response_code(400);
-    echo json_encode(["status" => "error", "status_code" => 400, "status_message" => "[Drafteam API] : BAD REQUEST"]);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 400,
+        "status_message" => "[Drafteam API] : BAD REQUEST"
+    ]);
     exit();
 }
 if (!checkTokenValidity($jwt)) {
     http_response_code(401);
-    echo json_encode(["status" => "error", "status_code" => 401, "status_message" => "Token JWT invalide"]);
+    echo json_encode([
+        "status" => "error",
+        "status_code" => 401,
+        "status_message" => "Token JWT invalide"
+    ]);
     exit();
 }
 
@@ -38,13 +46,34 @@ $payload = json_decode(base64_decode(explode('.', $jwt)[1]), true);
 $userRole = $payload['role'] ?? null;
 
 // Récupération des paramètres GET
-$numLicense = isset($_GET['numLicense']) ? $_GET['numLicense'] : null;
-$dateMatch  = isset($_GET['dateMatch'])  ? $_GET['dateMatch']  : null;
-$heure      = isset($_GET['heure'])      ? $_GET['heure']      : null;
-error_log($numLicense."--".$dateMatch.":".$heure);
-// Validation des paramètres obligatoires pour les méthodes autres que GET
-// Validation des paramètres obligatoires selon la méthode
-if (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT', 'DELETE']) && (!$numLicense || !$dateMatch || !$heure)) {
+$numLicense = $_GET['numLicense'] ?? null;
+$dateMatch  = $_GET['dateMatch'] ?? null;
+$heure      = $_GET['heure'] ?? null;
+
+// Validation des paramètres selon la méthode
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Cas : suppression d'une participation spécifique => tous les paramètres requis
+    if ($numLicense && (!$dateMatch || !$heure)) {
+        http_response_code(400);
+        echo json_encode([
+            "status" => "error",
+            "status_code" => 400,
+            "status_message" => "[Drafteam API] : Pour supprimer une participation précise, la date et l'heure sont aussi requises."
+        ]);
+        exit;
+    }
+
+    // Cas : suppression de toutes les participations d’un match => date et heure requis
+    if (!$numLicense && (!$dateMatch || !$heure)) {
+        http_response_code(400);
+        echo json_encode([
+            "status" => "error",
+            "status_code" => 400,
+            "status_message" => "[Drafteam API] : La date et l'heure du match sont requis pour supprimer les participations d’un match."
+        ]);
+        exit;
+    }
+} elseif (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT']) && (!$numLicense || !$dateMatch || !$heure)) {
     http_response_code(400);
     echo json_encode([
         "status" => "error",
@@ -54,16 +83,17 @@ if (in_array($_SERVER['REQUEST_METHOD'], ['PATCH', 'PUT', 'DELETE']) && (!$numLi
     exit;
 }
 
-// Récupération des données du body pour les méthodes POST, PUT, PATCH
+// Récupération des données JSON pour les méthodes POST, PUT, PATCH
 $input = json_decode(file_get_contents("php://input"), true);
-$estTitulaire = isset($input['estTitulaire']) ? $input['estTitulaire'] : null;
-$endurance = isset($input['endurance']) ? $input['endurance'] : null;
-$vitesse = isset($input['vitesse']) ? $input['vitesse'] : null;
-$defense = isset($input['defense']) ? $input['defense'] : null;
-$tirs = isset($input['tirs']) ? $input['tirs'] : null;
-$passes = isset($input['passes']) ? $input['passes'] : null;
-$poste = isset($input['poste']) ? $input['poste'] : null;
+$estTitulaire = $input['estTitulaire'] ?? null;
+$endurance    = $input['endurance']    ?? null;
+$vitesse      = $input['vitesse']      ?? null;
+$defense      = $input['defense']      ?? null;
+$tirs         = $input['tirs']         ?? null;
+$passes       = $input['passes']       ?? null;
+$poste        = $input['poste']        ?? null;
 
+// Traitement de la requête
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         readParticipation($linkpdo, $numLicense, $dateMatch, $heure);
@@ -79,8 +109,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-
         writeParticipation(
             $linkpdo,
             $numLicense,
@@ -106,8 +134,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-
         patchParticipation(
             $linkpdo,
             $numLicense,
@@ -133,8 +159,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-        $input = json_decode(file_get_contents("php://input"), true);
-
         putParticipation(
             $linkpdo,
             $numLicense,
@@ -160,8 +184,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
             ]);
             exit();
         }
-
-        // On peut gérer la suppression d'une ou toutes les participations d'un match
         deleteParticipation($linkpdo, $numLicense, $dateMatch, $heure);
         break;
 
