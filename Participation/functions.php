@@ -19,7 +19,14 @@ function readParticipation($linkpdo, $numLicense = null, $dateMatch = null, $heu
             $req = $linkpdo->prepare($sql);
             $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
             $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);
+        }elseif (!is_null($numLicense) && !is_null($dateMatch) && !is_null($heure)) {
+            $sql = "SELECT * FROM `PARTICIPATION` WHERE numLicense = :numLicense AND dateMatch = :dateMatch AND heure = :heure";
+            $req = $linkpdo->prepare($sql);
+            $req->bindParam(':numLicense', $numLicense, PDO::PARAM_STR);
+            $req->bindParam(':dateMatch', $dateMatch, PDO::PARAM_STR);
+            $req->bindParam(':heure', $heure, PDO::PARAM_STR);
         }
+        
 
         $req->execute();
         $res = $req->fetchAll(PDO::FETCH_ASSOC);
