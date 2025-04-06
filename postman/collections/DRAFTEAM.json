@@ -336,7 +336,8 @@
 							"host": [
 								"{{url_participation}}"
 							]
-						}
+						},
+						"description": "# Get Participation Details\n\nThis endpoint sends an HTTP GET request to retrieve participation details.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response\n\n- `id`: The unique identifier for the participation.\n    \n- `user_id`: The ID of the user associated with the participation.\n    \n- `event_id`: The ID of the event associated with the participation.\n    \n- `status`: The status of the participation (e.g. confirmed, pending, declined).\n    \n- `created_at`: The timestamp when the participation was created.\n    \n- `updated_at`: The timestamp when the participation was last updated."
 					},
 					"response": []
 				},
@@ -837,7 +838,8 @@
 					"path": [
 						""
 					]
-				}
+				},
+				"description": "## Description\n\nRécupere le bearer token de l'utilisateur demandé dans le body\n\n### Requête Body\n\n| Element | Description | **Type** | **Notes** |\n| --- | --- | --- | --- |\n| login | Login pour ce connecter à l'API | String |  |\n| password | Mot de passe du login | String |  |\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"[Drafteam API] : Authentification OK\",\n    \"data\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0NDAzNzc3NCwicm9sZSI6ImFkbWluaXN0cmF0ZXVyIn0.uVRbzE5k91Rgex-b-z0WCuhPYodeXhB2o0GU70wI2so\"\n}\n\n ```"
 			},
 			"response": []
 		}
