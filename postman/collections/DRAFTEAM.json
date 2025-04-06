@@ -1,0 +1,889 @@
+{
+	"info": {
+		"_postman_id": "7d6c7be6-b674-4d17-be63-0a576ca0428d",
+		"name": "DRAFTEAM",
+		"description": "## Urls à utiliser :\n\nAuthentication : [https://drafteamauthentication.lespi.fr/authentication.php](https://drafteamauthentication.lespi.fr/authentication.php)\n\nAPI Joueur : [https://drafteamapi.lespi.fr/Joueur/index.php](https://drafteamapi.lespi.fr/Joueur/index.php)\n\nAPI Match : [https://drafteamapi.lespi.fr/Match/index.php](https://drafteamapi.lespi.fr/Match/index.php)\n\nAPI Participation : [https://drafteamapi.lespi.fr/Participation/index.php](https://drafteamapi.lespi.fr/Participation/index.php)\n\nAPI Statistiques : [https://drafteamapi.lespi.fr/Statistiques/index.php](https://drafteamapi.lespi.fr/Statistiques/index.php)\n\n## Identifiants de connexion\n\n2 options sont possible selon le rôle attribué au compte, les options de modifications  \nsuppression peuvent être non autorisées :\n\n### Rôle Admininstrateur :\n\nlogin : admin\n\npassword : $iutinfo\n\n### Rôle User :\n\nlogin : user\n\npassword : $iutinfo\n\n## Informations\n\nNous avons décidé de partir sur du JS en  \nfrontend car le PHP est plutôt fait pour le Backend dans le monde professionnel  \net nous avons également pu apprendre sur JS en plus de PHP.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d"
+	},
+	"item": [
+		{
+			"name": "Joueur",
+			"item": [
+				{
+					"name": "Récuperer tous les Joueurs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e413f93a-aa86-4c24-8f88-0822d3410ff5",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "ef8bfdd7-f861-4342-84f6-7a8c07f7df90",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_joueur}}",
+							"host": [
+								"{{url_joueur}}"
+							]
+						},
+						"description": "## Description\n\nRécupere tous les Joueurs présent dans la base de données\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"numLicense\": \"3705547V\",\n            \"nom\": \"Anderson\",\n            \"prenom\": \"Barry\",\n            \"dateNaissance\": \"1993-06-05\",\n            \"commentaire\": \"Bed along hope because anyone your human nor military.\",\n            \"statut\": \"Actif\",\n            \"taille\": 201,\n            \"poids\": 93\n        },\n        ...\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Récuperer un certain Joueur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74adf15b-5292-4a45-bcac-5d242eb1edd6",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "8b1182a2-11d0-4381-9549-76df00413732",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_joueur}}?numLicense=1090634S",
+							"host": [
+								"{{url_joueur}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "1090634S"
+								}
+							]
+						},
+						"description": "## Description\n\nRécupere les informations du Joueur dont le numéro de licence est passé en paramètre.\n\n### **Réponse**\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données récupérées avec succès.\",\n    \"data\": [\n        {\n            \"numLicense\": \"1090634S\",\n            \"nom\": \"BINKS\",\n            \"prenom\": \"Jar-Jar\",\n            \"dateNaissance\": \"2001-01-01\",\n            \"commentaire\": \"American study employee sense whom civil world whole weight firm popular.\",\n            \"statut\": \"Actif\",\n            \"taille\": 210,\n            \"poids\": 84\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un Joueur",
+					"id": "a89266c9-2e81-46df-b6cc-a14aafd83ca0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nom\": \"ee\",\r\n\"prenom\": \"e\", \r\n\"dateNaissance\": \"5555-05-12\", \r\n\"commentaire\": \"\",\r\n\"statut\":\"actif\",\r\n\"poids\": 5,\r\n\"taille\":5}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_joueur}}?numLicense=test",
+							"host": [
+								"{{url_joueur}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "test"
+								}
+							]
+						},
+						"description": "### Description\n\nCrée un joueur dont le numéro de licence est celui passé en paramètre de requête avec les paramètres du body.\n\n#### Requête Body\n\n- `nom` (string): Nom du joueur.\n    \n- `prenom` (string): Prénom du joueur.\n    \n- `dateNaissance` (string): Date de naissance du joueur (format : YYYY-MM-DD).\n    \n- `commentaire` (string): Commentaire du joueur.\n    \n- `statut` (string): Statut du joueur (Actif, Suspendu, Blessé, Absent).\n    \n- `poids` (number): Poids du joueur.\n    \n- `taille` (number): Taille du joueur.\n    \n\n#### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 201,\n    \"status_message\": \"Donnée créée avec succès\",\n    \"data\": {\n        \"numLicense\": \"test\",\n        \"nom\": \"ee\",\n        \"prenom\": \"e\",\n        \"dateNaissance\": \"5555-05-12\",\n        \"commentaire\": \"\",\n        \"statut\": \"actif\",\n        \"taille\": 5,\n        \"poids\": 5\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un Joueur partiellement",
+					"id": "6f332694-109e-40ee-9676-a4040de25155",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taille\" : 7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_joueur}}?numLicense=1189323F",
+							"host": [
+								"{{url_joueur}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "1189323F"
+								}
+							]
+						},
+						"description": "## Description\n\nModification partiel d'un joueur. Un paramêtre doit nécéssairement être renséigné. Si tous les paramètres sont renséignés alors se diriger vers [Modifier un joueur entièrement](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-d91ab115-2b18-48c0-980a-a24be7d0bb4d?action=share&source=copy-link&creator=28333523&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n### Requête Body\n\n- `nom` (string): Nom du joueur.\n    \n- `prenom` (string): Prénom du joueur.\n    \n- `dateNaissance` (string): Date de naissance du joueur (format : YYYY-MM-DD).\n    \n- `commentaire` (string): Commentaire du joueur.\n    \n- `statut` (string): Statut du joueur (Actif, Suspendu, Blessé, Absent).\n    \n- `poids` (number): Poids du joueur.\n    \n- `taille` (number): Taille du joueur.\n    \n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données modifiées avec succès\",\n    \"data\": {\n        \"numLicense\": \"1189323F\",\n        \"nom\": \"Norton\",\n        \"prenom\": \"Stephanie\",\n        \"dateNaissance\": \"2006-02-08\",\n        \"commentaire\": \"Write picture draw return stock both Mr debate administration center.\",\n        \"statut\": \"Blessé\",\n        \"taille\": 7,\n        \"poids\": 87\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un Joueur entierement",
+					"id": "d91ab115-2b18-48c0-980a-a24be7d0bb4d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nom\": \"Norton\",\r\n    \"prenom\": \"Stephanie\",\r\n    \"dateNaissance\": \"2006-02-08\",\r\n    \"commentaire\": \"Write picture draw return stock both Mr debate administration center.\",\r\n    \"statut\": \"Blessé\",\r\n    \"taille\": 7,\r\n    \"poids\": 87\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_joueur}}?numLicense=1090634S",
+							"host": [
+								"{{url_joueur}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "1090634S"
+								}
+							]
+						},
+						"description": "## Description\n\nModification entière du joueur dont le numéro de licence est renséigné en paramètre de la requête. Tous les paramêtres doivent nécéssairement être renséigné. Si pas tous les paramètres sont renséignés alors se diriger vers [Modifier un joueur partiellement](https://drafteam-workspace.postman.co/workspace/Drafteam-Workspace-Workspace~7db570d7-e489-4a31-b8b4-166e0eb9a158/api/8a3045ed-a6be-4f22-bdc9-fc10de862059/request/28333523-6f332694-109e-40ee-9676-a4040de25155?action=share&source=copy-link&creator=28333523&branch=master&collection=28333523-7d6c7be6-b674-4d17-be63-0a576ca0428d&active-environment=a532666e-dd29-409a-b92e-c240259b0a9b)\n\n### Requête Body\n\n- `nom` (string): Nom du joueur.\n    \n- `prenom` (string): Prénom du joueur.\n    \n- `dateNaissance` (string): Date de naissance du joueur (format : YYYY-MM-DD).\n    \n- `commentaire` (string): Commentaire du joueur.\n    \n- `statut` (string): Statut du joueur (Actif, Suspendu, Blessé, Absent).\n    \n- `poids` (number): Poids du joueur.\n    \n- `taille` (number): Taille du joueur.\n    \n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données modifiées avec succès\",\n    \"data\": {\n        \"numLicense\": \"1090634S\",\n        \"nom\": \"Norton\",\n        \"prenom\": \"Stephanie\",\n        \"dateNaissance\": \"2006-02-08\",\n        \"commentaire\": \"Write picture draw return stock both Mr debate administration center.\",\n        \"statut\": \"Blessé\",\n        \"taille\": 7,\n        \"poids\": 87\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un Joueur",
+					"id": "8d4b7ea5-53bb-44cf-8a31-22326b777134",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_joueur}}?numLicense=test",
+							"host": [
+								"{{url_joueur}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "test"
+								}
+							]
+						},
+						"description": "## Description\n\nSupprime le joueur dont le numéro de licence est celui passé en paramètre de requête.\n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Données numLicense:test supprimée avec succès.\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"id": "633077ba-1ed5-48e3-a4af-a01ec5af3b34"
+		},
+		{
+			"name": "Participation",
+			"item": [
+				{
+					"name": "Récuperer toutes les Participations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7898a196-8fef-47ed-82eb-84c4af06ff4d",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "3b94bea8-7e4d-483e-9559-b3be7b0a6d4a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Récuperer une certaine Participation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1cc6ce5d-2101-40ad-9236-1fbacdd3eb80",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "22c9267d-8355-4157-aa40-b155ec786d61",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer une Participation",
+					"id": "99c0cdc6-9f85-49fe-93d1-e8a675a4eb46",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"phrase\" : \"La nouvelle phrase\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier une Participation partiellement",
+					"id": "9944906d-f48b-4efc-b489-121e45d6b671",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vote\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un Participation entierement",
+					"id": "11394dfb-472e-4e96-9347-f197f87c9a95",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phrase\" : \"La nouvel phrase\",\r\n    \"vote\" : 2,\r\n    \"faute\" : 1,\r\n    \"signalement\" : 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une Participation",
+					"id": "d3506d97-6d46-456c-ab5d-8f1a6858bd82",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_participation}}",
+							"host": [
+								"{{url_participation}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "424fd5f8-5fd2-4866-8c81-41a10999bb3a"
+		},
+		{
+			"name": "Match",
+			"item": [
+				{
+					"name": "Récuperer tous les Matchs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "02dd26f2-e0db-4d4e-a6a4-9afedff7b74a",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "0231d27d-eda5-4d0c-8f0b-1f5b458b4f0b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_match}}",
+							"host": [
+								"{{url_match}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Récuperer un certain Match",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e74548d-2f90-4f00-99d0-b650260d8d2d",
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Phrase</th>\r",
+									"        <th>Date Added</th>\r",
+									"        <th>Date Modified</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.data}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{phrase}}</td>\r",
+									"            <td>{{date_ajout}}</td>\r",
+									"            <td>{{date_modif}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "1449d4a2-3a47-4760-8233-f9ed08fe8e2a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_match}}?dateMatch=2020-03-15&heure=05:09:22",
+							"host": [
+								"{{url_match}}"
+							],
+							"query": [
+								{
+									"key": "dateMatch",
+									"value": "2020-03-15",
+									"type": "text"
+								},
+								{
+									"key": "heure",
+									"value": "05:09:22",
+									"type": "text"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Créer un Match",
+					"id": "3074f8c7-147c-4e96-b193-ec38bbce5250",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"dateMatch\" : \"2025-04-12\",\r\n\"heure\" : \"20:20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_match}}",
+							"host": [
+								"{{url_match}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un Match partiellement",
+					"id": "ce9b6af9-3ef8-4341-ac26-cb62ae7314d3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vote\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_match}}",
+							"host": [
+								"{{url_match}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un Match entierement",
+					"id": "2bf542e5-f614-487b-b8b6-53ca63115a0f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phrase\" : \"La nouvel phrase\",\r\n    \"vote\" : 2,\r\n    \"faute\" : 1,\r\n    \"signalement\" : 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_match}}",
+							"host": [
+								"{{url_match}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer un Match",
+					"id": "ae7af46a-cb9a-48c7-9d60-c26a9c844714",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url_match}}",
+							"host": [
+								"{{url_match}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "49752696-2382-48d6-9952-15de326eb200"
+		},
+		{
+			"name": "Statistiques",
+			"item": [
+				{
+					"name": "Récuperer les statistiques des Matchs",
+					"id": "581d8b99-2cae-4606-94eb-6cdb038439d8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_statistiques}}",
+							"host": [
+								"{{url_statistiques}}"
+							]
+						},
+						"description": "## Description\n\nRetourne les statistiques de l'équipe.\n\n### Réponse\n\nLa réponse de la requête est au format JSON.\n\n``` json\n{\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Statistiques récupérées avec succès.\",\n    \"data\": {\n        \"totalMatchs\": 49,\n        \"matchsGagnes\": \"22\",\n        \"matchsPerdus\": \"24\",\n        \"matchsNuls\": \"3\",\n        \"pourcentageGagnes\": \"44.90\",\n        \"pourcentagePerdus\": \"48.98\",\n        \"pourcentageNuls\": \"6.12\"\n    }\n}\n\n ```\n\n- totalMatchs : Nombre total de matchs joués\n    \n- matchsGagnes : Nombre de matchs gagnés\n    \n- matchsPerdus : Nombre de matchs perdus\n    \n- matchsNuls : Nombre de matchs dont le score est nul\n    \n- pourcentageGagnes : Pourcentage de matchs gagnés\n    \n- pourcentagePerdus : Pourcentage de matchs perdus\n    \n- pourcentageNuls : Pourcentage de matchs nuls"
+					},
+					"response": []
+				},
+				{
+					"name": "Récuperer les statistiques d'un Joueur",
+					"id": "01db0b3c-0135-4a88-9fc6-0e57bad80e88",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_statistiques}}?numLicense=1090634S",
+							"host": [
+								"{{url_statistiques}}"
+							],
+							"query": [
+								{
+									"key": "numLicense",
+									"value": "1090634S"
+								}
+							]
+						},
+						"description": "### Description\n\nRécupere les statistiques du joueur dont le numéro de licence est celui passé en paramètre de la requête.\n\n### **Réponse**\n\n``` json\n {\n    \"status\": \"success\",\n    \"status_code\": 200,\n    \"status_message\": \"Statistiques du joueur récupérées avec succès.\",\n    \"data\": {\n        \"postePrefere\": \"Ailier droit\",\n        \"totalTitulaire\": 1,\n        \"totalRemplacant\": 3,\n        \"pourcentageMatchsGagnes\": 25,\n        \"moyenneEndurance\": 85.75,\n        \"moyenneVitesse\": 82.5,\n        \"moyenneDefense\": 80.25,\n        \"moyenneTirs\": 82,\n        \"moyennePasses\": 80.25,\n        \"selectionsConsecutives\": 4\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"id": "f199b404-394a-446d-9c77-375e7a8ce235"
+		},
+		{
+			"name": "GetAuth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cc2e178e-ddbd-476b-ac71-d4c3df35f10f",
+						"exec": [
+							"pm.environment.set(\"token\", pm.response.json().data);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "c565f1f5-2ba4-43cc-9e92-3692fcabb19a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"admin\",\r\n    \"password\": \"$iutinfo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url_auth}}/",
+					"host": [
+						"{{url_auth}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a7d93ac6-a09e-47c1-98a5-c7771b1c80ed",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ab97e123-5497-424f-8451-188caeff47f1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "20c0c347-e568-4d31-a058-55413ea4be41",
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"id": "063c932a-494a-495c-bcfc-6a975c323637",
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}
